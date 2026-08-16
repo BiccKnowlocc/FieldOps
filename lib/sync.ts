@@ -1,11 +1,45 @@
 import { createId } from './id';
 import { getStorage, nowDoc } from './storage';
+import { pushDocsToApi } from './api';
 import type { Collection, ConflictRecord, StoredDoc } from './types';
 
-const SYNCABLE: Collection[] = ['jobsites', 'crew', 'daily_logs', 'punch_items', 'media'];
+const SYNCABLE: Collection[] = [
+  'jobsites',
+  'crew',
+  'daily_logs',
+  'punch_items',
+  'media',
+  'assets',
+  'meter_entries',
+  'inspections',
+  'service_logs',
+  'checkouts',
+  'estimate_lines',
+  'takeoffs',
+  'change_orders',
+  'receipts',
+  'purchase_orders',
+  'time_entries',
+  'shifts',
+  'work_orders',
+  'toolbox_talks',
+  'incidents',
+  'drawings',
+  'certifications',
+  'bim_pins',
+  'pay_apps',
+  'lien_waivers',
+  'drone_surveys',
+];
 
 function remoteId(entityId: string) {
   return `remote:${entityId}`;
+}
+
+let syncTenantId: string | null = null;
+
+export function setSyncTenant(id: string | null) {
+  syncTenantId = id;
 }
 
 export type SyncResult = {
@@ -90,6 +124,16 @@ export async function runSync(): Promise<SyncResult> {
         result.pushed += 1;
       }
     }
+  }
+
+  if (syncTenantId) {
+    const pending: StoredDoc[] = [];
+    for (const collection of SYNCABLE) {
+      const docs = await storage.getAll(collection);
+      pending.push(...docs.filter((doc) => doc.syncStatus === 'pending'));
+    }
+    const remote = await pushDocsToApi(syncTenantId, pending);
+    if (remote.pushed > result.pushed) result.pushed = remote.pushed;
   }
 
   return result;

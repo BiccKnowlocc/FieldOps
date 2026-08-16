@@ -4,16 +4,23 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Card, PrimaryButton, SecondaryButton } from '@/components/kit';
 import { Screen } from '@/components/Screen';
 import { colors, radius, type } from '@/constants/theme';
+import { useAuth } from '@/context/AuthContext';
 import { useFieldOps } from '@/context/FieldOpsProvider';
+import { apiConfigured } from '@/lib/api';
 
 export default function MoreScreen() {
   const router = useRouter();
+  const { signOut, session, can } = useAuth();
   const { jobsites, jobsite, setJobsite, pendingCount, conflicts, syncNow, resolveConflict, simulateConflict, online } =
     useFieldOps();
 
   return (
     <Screen>
       <Text style={type.title}>Jobsite & sync</Text>
+      <Text style={type.meta}>
+        {session?.name} · {session?.role} · {session?.companyCode}
+        {apiConfigured() ? ' · Atlas API on' : ' · local until Atlas URI is set'}
+      </Text>
       <Card>
         {jobsites.map((site) => (
           <Pressable
@@ -58,10 +65,17 @@ export default function MoreScreen() {
       ))}
 
       <Text style={type.label}>OTHER MODULES</Text>
-      <ModuleLink label="Equipment, fleet & assets" onPress={() => router.push('/equipment')} />
-      <ModuleLink label="Estimating & job costing" onPress={() => router.push('/costing')} />
-      <ModuleLink label="Labor, dispatch & subs" onPress={() => router.push('/labor')} />
-      <ModuleLink label="Safety, compliance & drawings" onPress={() => router.push('/safety')} />
+      {can('equipment') ? <ModuleLink label="Equipment, fleet & assets" onPress={() => router.push('/equipment')} /> : null}
+      {can('costing') ? <ModuleLink label="Estimating & job costing" onPress={() => router.push('/costing')} /> : null}
+      {can('labor_clock') ? <ModuleLink label="Labor, dispatch & subs" onPress={() => router.push('/labor')} /> : null}
+      {can('safety') ? <ModuleLink label="Safety, compliance & drawings" onPress={() => router.push('/safety')} /> : null}
+      <SecondaryButton
+        label="Sign out"
+        onPress={async () => {
+          await signOut();
+          router.replace('/login');
+        }}
+      />
     </Screen>
   );
 }

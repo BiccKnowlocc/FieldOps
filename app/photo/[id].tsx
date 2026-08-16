@@ -9,6 +9,7 @@ import { Screen } from '@/components/Screen';
 import { colors, radius, type } from '@/constants/theme';
 import { useFieldOps } from '@/context/FieldOpsProvider';
 import { formatGps, formatStamp } from '@/lib/dates';
+import { formatAccuracyM } from '@/lib/units';
 import type { MediaTag } from '@/lib/types';
 
 const TAGS: { id: MediaTag; label: string }[] = [
@@ -17,6 +18,9 @@ const TAGS: { id: MediaTag; label: string }[] = [
   { id: 'before', label: 'Before' },
   { id: 'after', label: 'After' },
   { id: 'delivery', label: 'Delivery' },
+  { id: 'receipt', label: 'Receipt' },
+  { id: 'incident', label: 'Incident' },
+  { id: 'ticket', label: 'Ticket' },
 ];
 
 export default function PhotoScreen() {
@@ -51,7 +55,7 @@ export default function PhotoScreen() {
       </View>
       <Text style={type.meta}>
         {formatStamp(item.capturedAt)} · {formatGps(item.lat, item.lng)}
-        {item.accuracyM != null ? ` · ±${Math.round(item.accuracyM)}m` : ''}
+        {item.accuracyM != null ? ` · ${formatAccuracyM(item.accuracyM)}` : ''}
       </Text>
       <ChipGroup>
         {TAGS.map((tag) => (

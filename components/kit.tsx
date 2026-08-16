@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
 
 import { colors, radius, tap, type } from '@/constants/theme';
+import { useBrand } from '@/context/TenantContext';
 
 export function PrimaryButton({
   label,
@@ -14,6 +15,7 @@ export function PrimaryButton({
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 }) {
+  const { colors } = useBrandSafe();
   return (
     <Pressable
       accessibilityRole="button"
@@ -21,7 +23,8 @@ export function PrimaryButton({
       disabled={disabled}
       style={({ pressed }) => [
         styles.primary,
-        pressed && styles.primaryPressed,
+        { backgroundColor: colors.orange },
+        pressed && { backgroundColor: colors.orangePress },
         disabled && styles.disabled,
         style,
       ]}>
@@ -79,27 +82,41 @@ export function Stepper({
   suffix,
   min = 0,
   max = 200,
+  step = 1,
 }: {
   value: number;
   onChange: (value: number) => void;
   suffix?: string;
   min?: number;
   max?: number;
+  step?: number;
 }) {
   return (
     <View style={styles.stepper}>
-      <Pressable style={styles.stepBtn} onPress={() => onChange(Math.max(min, value - 1))}>
+      <Pressable style={styles.stepBtn} onPress={() => onChange(Math.max(min, roundStep(value - step, step)))}>
         <Text style={styles.stepBtnText}>−</Text>
       </Pressable>
       <Text style={styles.stepValue}>
         {value}
         {suffix ? ` ${suffix}` : ''}
       </Text>
-      <Pressable style={styles.stepBtn} onPress={() => onChange(Math.min(max, value + 1))}>
+      <Pressable style={styles.stepBtn} onPress={() => onChange(Math.min(max, roundStep(value + step, step)))}>
         <Text style={styles.stepBtnText}>+</Text>
       </Pressable>
     </View>
   );
+}
+
+function roundStep(value: number, step: number) {
+  return Math.round(value / step) * step;
+}
+
+function useBrandSafe() {
+  try {
+    return useBrand();
+  } catch {
+    return { colors };
+  }
 }
 
 export function Card({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {

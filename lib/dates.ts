@@ -1,3 +1,5 @@
+import { LOCALE } from './units';
+
 export function todayISO() {
   const d = new Date();
   const y = d.getFullYear();
@@ -18,19 +20,24 @@ export function addDaysISO(iso: string, days: number) {
 
 export function formatDay(iso: string) {
   const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+  return new Date(y, m - 1, d).toLocaleDateString(LOCALE, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
   });
 }
 
+export function formatClock(ms: number) {
+  return new Date(ms).toLocaleTimeString(LOCALE, { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+
 export function formatStamp(ms: number) {
-  return new Date(ms).toLocaleString(undefined, {
+  return new Date(ms).toLocaleString(LOCALE, {
     month: 'short',
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
+    hour12: true,
   });
 }
 
@@ -39,4 +46,13 @@ export function formatGps(lat: number | null, lng: number | null) {
   const ns = lat >= 0 ? 'N' : 'S';
   const ew = lng >= 0 ? 'E' : 'W';
   return `${Math.abs(lat).toFixed(5)}° ${ns}, ${Math.abs(lng).toFixed(5)}° ${ew}`;
+}
+
+export function daysUntil(iso: string) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const target = new Date(y, m - 1, d).getTime();
+  const today = todayISO();
+  const [ty, tm, td] = today.split('-').map(Number);
+  const start = new Date(ty, tm - 1, td).getTime();
+  return Math.round((target - start) / 86_400_000);
 }

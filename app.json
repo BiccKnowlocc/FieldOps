@@ -10,9 +10,9 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "FieldOps captures progress and punch-list photos on site.",
+        "NSCameraUsageDescription": "FieldOps captures site photos and scans QR codes on tools and machines.",
         "NSPhotoLibraryUsageDescription": "FieldOps attaches existing photos to logs and punch items.",
-        "NSLocationWhenInUseUsageDescription": "FieldOps tags photos and site records with GPS so they are tied to the jobsite."
+        "NSLocationWhenInUseUsageDescription": "FieldOps tags photos and clocks crew in against the jobsite geofence."
       }
     },
     "android": {
@@ -26,12 +26,13 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION"
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "single",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -57,7 +58,20 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "FieldOps tags photos and site records with GPS so they are tied to the jobsite."
+          "locationWhenInUsePermission": "FieldOps tags photos and clocks crew in against the jobsite geofence."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "FieldOps scans QR codes on tools and machines for check-in and check-out."
+        }
+      ],
+      "expo-secure-store",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "FieldOps records voice daily logs on the job."
         }
       ]
     ],

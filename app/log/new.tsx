@@ -22,7 +22,7 @@ export default function NewLogScreen() {
         jobsiteId: jobsite?.id ?? '',
         logDate: todayISO(),
         weather: 'clear',
-        tempF: 68,
+        tempC: 20,
         crewIds: [],
         workChips: [],
         workNotes: '',

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useMemo, useRef, useState } from 'react';
 import { LayoutChangeEvent, PanResponder, Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Line, Polygon, Polyline } from 'react-native-svg';
@@ -15,9 +16,11 @@ const TOOLS = [
 export function MarkupCanvas({
   strokes,
   onChange,
+  children,
 }: {
   strokes: MarkupStroke[];
   onChange: (strokes: MarkupStroke[]) => void;
+  children?: ReactNode;
 }) {
   const [tool, setTool] = useState<(typeof TOOLS)[number]['id']>('draw');
   const [size, setSize] = useState({ width: 1, height: 1 });
@@ -66,6 +69,7 @@ export function MarkupCanvas({
         style={styles.canvas}
         onLayout={(e: LayoutChangeEvent) => setSize(e.nativeEvent.layout)}
         {...responder.panHandlers}>
+        {children}
         <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
           {strokes.map((stroke) =>
             stroke.kind === 'arrow' ? (
@@ -132,7 +136,7 @@ function normalize(x: number, y: number, size: { width: number; height: number }
 
 const styles = StyleSheet.create({
   wrap: { gap: 10, flex: 1 },
-  canvas: { flex: 1, borderRadius: radius.md, overflow: 'hidden' },
+  canvas: { flex: 1, minHeight: 280, borderRadius: radius.md, overflow: 'hidden' },
   tools: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   tool: {
     minHeight: 44,

@@ -34,7 +34,7 @@ export function LogForm({
             <Chip key={item.id} label={item.label} selected={value.weather === item.id} onPress={() => patch({ weather: item.id })} />
           ))}
         </ChipGroup>
-        <Stepper value={value.tempF} onChange={(tempF) => patch({ tempF })} suffix="°F" min={-20} max={130} />
+        <Stepper value={value.tempC} onChange={(tempC) => patch({ tempC })} suffix="°C" min={-40} max={45} />
       </Section>
 
       <Section title="On site now">

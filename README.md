@@ -25,7 +25,9 @@ On Windows, `npm run android` after USB debugging or an emulator.
 4. **Photos** — camera or library, automatic timestamp + GPS, draw / arrow / highlight markup, attach to a log or punch item.
 5. **More** — jobsite switcher, manual sync, conflict resolution. Use **Simulate office conflict** then **Sync now** to try keep-field vs keep-office.
 
-Widen the window past 960px for the office sidebar (all five product areas).
+Widen the window past 960px for a wider field layout.
+
+Office supervisors and back-office staff use the separate **FieldOps Admin** desktop site (`../FieldOps-Admin`) to add equipment, tools, employees, PINs, jobsites, and tickets. Run `npm run api` here, then `npm run dev` in that repo.
 
 ## Offline sync
 

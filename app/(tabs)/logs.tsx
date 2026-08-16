@@ -23,7 +23,7 @@ export default function LogsScreen() {
             <View style={{ flex: 1 }}>
               <Text style={styles.title}>{formatDay(log.logDate)}</Text>
               <Text style={type.meta}>
-                {weatherLabel(log.weather)} · {log.tempF}°F · {log.crewIds.length}/{crew.length} on site
+                {weatherLabel(log.weather)} · {log.tempC}°C · {log.crewIds.length}/{crew.length} on site
               </Text>
               <Text style={styles.work} numberOfLines={2}>
                 {log.workChips.join(' · ') || log.workNotes || 'No work tagged'}
